@@ -1,0 +1,23 @@
+{
+  "firestore": {
+    "rules": "fire_auth/config/firestore.rules",
+    "indexes": "fire_auth/config/firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "emulators": {
+    "firestore": {
+      "port": 8181
+    },
+    "ui": {
+      "enabled": true,
+      "port": 4000
+    }
+  }
+}

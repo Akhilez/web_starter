@@ -8,9 +8,15 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = ['*']
 STATIC_URL = '/static/'
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
+PROD_ENV = 'PROD'
+DEV_ENV = 'DEV'
+ENV_TYPE = config('ENV_TYPE', default=DEV_ENV)
 
 MY_APPS = [
     'app',
+    'fire_auth',
 ]
 
 LOGGING = {
@@ -35,7 +41,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'quiz.log',
+            'filename': 'app.log',
             'formatter': 'verbose',
             'maxBytes': 1024 * 1024,  # 1 MB
             'backupCount': 2,
@@ -52,13 +58,24 @@ LOGGING = {
 
 log = logging.getLogger('django')
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'fire_auth.lib.authentication.FirebaseAuthentication',
+    ),
+}
+
+# ----------------------
+
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
 ] + MY_APPS
 
 MIDDLEWARE = [
@@ -91,12 +108,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+'''
 
 AUTH_PASSWORD_VALIDATORS = [
     {
