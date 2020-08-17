@@ -1,16 +1,43 @@
-// Firebase App (the core Firebase SDK) is always required and must be listed first
-import * as firebase from "firebase/app";
-
-// If you enabled Analytics in your project, add the Firebase SDK for Analytics
+import app from "firebase/app";
 import "firebase/analytics";
-
-// Add the Firebase products that you want to use
 import "firebase/auth";
 import "firebase/firestore";
+import React from "react";
 
-import { firebaseConfig } from "../../keys/firebaseConfig";
+import firebase_config_prod from "../../keys/firebase_config_prod";
+import firebase_config_dev from "../../keys/firebase_config_dev";
 
-// Initialize Firebase
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
+const config =
+  process.env.NODE_ENV === "production"
+    ? firebase_config_prod
+    : firebase_config_dev;
+
+export class Firebase {
+  constructor() {
+    if (!app.apps.length) app.initializeApp(config);
+    this.auth = app.auth();
+  }
+
+  // *** Auth API ***
+
+  doCreateUserWithEmailAndPassword = (email, password) =>
+    this.auth.createUserWithEmailAndPassword(email, password);
+
+  doSignInWithEmailAndPassword = (email, password) =>
+    this.auth.signInWithEmailAndPassword(email, password);
+
+  doSignOut = () => this.auth.signOut();
+
+  doPasswordReset = (email) => this.auth.sendPasswordResetEmail(email);
+
+  doPasswordUpdate = (password) =>
+    this.auth.currentUser.updatePassword(password);
 }
+
+export const FirebaseContext = React.createContext(null);
+
+export const withFirebase = (Component) => (props) => (
+  <FirebaseContext.Consumer>
+    {(firebase) => <Component {...props} firebase={firebase} />}
+  </FirebaseContext.Consumer>
+);

@@ -19,11 +19,12 @@ export default function () {
       justifyContent="center"
       alignItems="center"
       p="200px"
+      backgroundColor="gray.100"
     >
       <Heading mb={8} as="h1">
         Project Name
       </Heading>
-      <Stack width="md" backgroundColor="gray.100" p={8}>
+      <Stack width="md" backgroundColor="white" p={8}>
         <Heading as="h4" size="lg">
           Login
         </Heading>

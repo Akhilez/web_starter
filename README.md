@@ -13,7 +13,7 @@ A cookie cutter template for web apps using my favorite stack -> Django + React
 
 ##### TODO:
 
-- DRF Firebase auth
+- Auth on front-end
 - firestore ORM (FireO)
 - Sign up
 - Sign up with google

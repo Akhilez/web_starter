@@ -13,5 +13,6 @@ export default {
       800: "#153e75",
       700: "#2a69ac",
     },
+    backgroundColor: "gray.100",
   },
 };
