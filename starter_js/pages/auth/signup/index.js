@@ -10,12 +10,13 @@ import {
   Button,
   Alert,
   AlertIcon,
-  AlertTitle,
   AlertDescription,
 } from "@chakra-ui/core";
 import NextLink from "next/link";
+import Router from "next/router";
 import CloseButton from "@chakra-ui/core/dist/CloseButton";
 import { withFirebase } from "../firebase";
+import { urls } from "../../settings";
 
 const INITIAL_STATE = {
   email: "",
@@ -30,17 +31,17 @@ class SignUp extends React.Component {
     this.state = { ...INITIAL_STATE };
   }
   onSubmit = (event) => {
-    const { username, email, passwordOne } = this.state;
+    const { email, passwordOne } = this.state;
 
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then((authUser) => {
         this.setState({ ...INITIAL_STATE });
+        Router.push(urls.login);
       })
       .catch((error) => {
         this.setState({ error });
       });
-
     event.preventDefault();
   };
   onChange = (event) => {
@@ -65,65 +66,62 @@ class SignUp extends React.Component {
           <Heading as="h4" size="lg">
             Sign up
           </Heading>
-          <form onSubmit={this.onSubmit}>
-            <InputGroup mt={4}>
-              <InputLeftAddon w="100px">Email</InputLeftAddon>
-              <Input
-                name="email"
-                value={email}
-                onChange={this.onChange}
-                type="text"
-                placeholder="Email Address"
-              />
-            </InputGroup>
-            <InputGroup mt={2}>
-              <InputLeftAddon w="100px">Password</InputLeftAddon>
-              <Input
-                name="passwordOne"
-                value={passwordOne}
-                onChange={this.onChange}
-                type="password"
-                placeholder="Password"
-              />
-            </InputGroup>
-            <InputGroup mt={2}>
-              <InputLeftAddon w="100px">Confirm</InputLeftAddon>
-              <Input
-                name="passwordTwo"
-                value={passwordTwo}
-                onChange={this.onChange}
-                type="password"
-                placeholder="Confirm Password"
-              />
-            </InputGroup>
-            <InputGroup mt={2}>
-              <Button
-                disabled={isInvalid}
-                backgroundColor="twitter.500"
-                color="white"
-                mt={4}
-                type="submit"
-                w="100%"
-              >
-                Sign Up
-              </Button>
-            </InputGroup>
-            <InputGroup mt={2}>
-              <Button w="100%" variantColor="twitter">
-                Sign up with Google
-              </Button>
-            </InputGroup>
-          </form>
+          <InputGroup mt={4}>
+            <InputLeftAddon w="100px">Email</InputLeftAddon>
+            <Input
+              name="email"
+              value={email}
+              onChange={this.onChange}
+              type="text"
+              placeholder="Email Address"
+            />
+          </InputGroup>
+          <InputGroup mt={2}>
+            <InputLeftAddon w="100px">Password</InputLeftAddon>
+            <Input
+              name="passwordOne"
+              value={passwordOne}
+              onChange={this.onChange}
+              type="password"
+              placeholder="Password"
+            />
+          </InputGroup>
+          <InputGroup mt={2}>
+            <InputLeftAddon w="100px">Confirm</InputLeftAddon>
+            <Input
+              name="passwordTwo"
+              value={passwordTwo}
+              onChange={this.onChange}
+              type="password"
+              placeholder="Confirm Password"
+            />
+          </InputGroup>
+          <InputGroup mt={2}>
+            <Button
+              disabled={isInvalid}
+              backgroundColor="twitter.500"
+              color="white"
+              mt={4}
+              type="submit"
+              w="100%"
+              onClick={this.onSubmit}
+            >
+              Sign Up
+            </Button>
+          </InputGroup>
+          <InputGroup mt={2}>
+            <Button w="100%" variantColor="twitter">
+              Sign up with Google
+            </Button>
+          </InputGroup>
           {error && (
             <Alert status="error" mt={2}>
               <AlertIcon />
-              <AlertTitle mr={2}>Your browser is outdated!</AlertTitle>
-              <AlertDescription mr="50px">{error.message}</AlertDescription>
-              <CloseButton position="absolute" right="8px" top="8px" />
+              <AlertDescription>{error.message}</AlertDescription>
             </Alert>
           )}
           <Text textAlign="center" mt={2}>
-            <NextLink href="/auth/login">login</NextLink>
+            <NextLink href={urls.login}>login</NextLink>
           </Text>
         </Stack>
       </Flex>
