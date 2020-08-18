@@ -24,9 +24,13 @@ const INITIAL_STATE = {
 };
 
 class LogIn extends React.Component {
-  constructor(props) {
+  constructor({ authUser, ...props }) {
     super(props);
     this.state = { ...INITIAL_STATE };
+    this.authUser = authUser;
+  }
+  componentDidMount() {
+    if (this.authUser) Router.push(urls.home);
   }
   onSubmit = (event) => {
     const { email, password } = this.state;

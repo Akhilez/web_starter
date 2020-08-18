@@ -41,3 +41,48 @@ export const withFirebase = (Component) => (props) => (
     {(firebase) => <Component {...props} firebase={firebase} />}
   </FirebaseContext.Consumer>
 );
+
+// ---------------------------------
+
+export const AuthUserContext = React.createContext(null);
+
+export class WithAuthProvider extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.props = props;
+
+    this.state = {
+      authUser: null, // JSON.parse(localStorage.getItem("authUser")),
+    };
+  }
+  componentDidMount() {
+    this.setState({ authUser: JSON.parse(localStorage.getItem("authUser")) });
+    this.listener = this.props.firebase.auth.onAuthStateChanged(
+      (authUser) => {
+        localStorage.setItem("authUser", JSON.stringify(authUser));
+        this.setState({ authUser });
+      },
+      () => {
+        localStorage.removeItem("authUser");
+        this.setState({ authUser: null });
+      }
+    );
+  }
+  componentWillUnmount() {
+    this.listener();
+  }
+  render() {
+    return (
+      <AuthUserContext.Provider value={this.state.authUser}>
+        {this.props.children}
+      </AuthUserContext.Provider>
+    );
+  }
+}
+
+export const withAuth = (Component) => (props) => (
+  <AuthUserContext.Consumer>
+    {(authUser) => <Component {...props} authUser={authUser} />}
+  </AuthUserContext.Consumer>
+);

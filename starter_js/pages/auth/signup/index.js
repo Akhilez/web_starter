@@ -14,7 +14,6 @@ import {
 } from "@chakra-ui/core";
 import NextLink from "next/link";
 import Router from "next/router";
-import CloseButton from "@chakra-ui/core/dist/CloseButton";
 import { withFirebase } from "../firebase";
 import { urls } from "../../settings";
 
@@ -26,9 +25,10 @@ const INITIAL_STATE = {
 };
 
 class SignUp extends React.Component {
-  constructor(props) {
+  constructor({ authUser, ...props }) {
     super(props);
     this.state = { ...INITIAL_STATE };
+    if (authUser) Router.push(urls.home);
   }
   onSubmit = (event) => {
     const { email, passwordOne } = this.state;

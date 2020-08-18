@@ -1,8 +1,11 @@
 import Head from "next/head";
 import NextLink from "next/link";
 import { urls } from "./settings";
+import React from "react";
+import { Router } from "next/router";
 
-export default function Landing() {
+export default function Landing({ authUser }) {
+  if (authUser) Router.push(urls.home);
   return (
     <div>
       <Head>

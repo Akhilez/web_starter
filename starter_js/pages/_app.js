@@ -3,17 +3,37 @@ import { ThemeProvider } from "@chakra-ui/core";
 import customTheme from "./theme/theme";
 import CSSReset from "@chakra-ui/core/dist/CSSReset";
 import "./auth/firebase";
-import { Firebase, FirebaseContext } from "./auth/firebase";
+import { Firebase, FirebaseContext, WithAuthProvider } from "./auth/firebase";
 
-function MyApp({ Component, pageProps }) {
+export default function ({ Component, ...props }) {
   return (
     <ThemeProvider theme={customTheme}>
       <CSSReset />
       <FirebaseContext.Provider value={new Firebase()}>
-        <Component {...pageProps} />
+        <FirebaseContext.Consumer>
+          {(firebase) => (
+            <WithAuthProvider firebase={firebase}>
+              <Component {...props} />
+            </WithAuthProvider>
+          )}
+        </FirebaseContext.Consumer>
       </FirebaseContext.Provider>
     </ThemeProvider>
   );
 }
 
-export default MyApp;
+const hierarchy = {
+  _app: {
+    ThemeProvider: {
+      FirebaseProvider: {
+        MyAppWithFirebase: {
+          FirebaseConsumer: {
+            AuthProvider: {
+              Component: "Component",
+            },
+          },
+        },
+      },
+    },
+  },
+};
