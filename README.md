@@ -13,6 +13,7 @@ A cookie cutter template for web apps using my favorite stack -> Django + React
 
 ##### TODO:
 
+- Get rid of the fucking django and replace with with FastAPI
 - Auth on front-end
 - firestore ORM (FireO)
 - Sign up
